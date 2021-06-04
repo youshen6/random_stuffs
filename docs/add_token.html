@@ -7,14 +7,22 @@
 
 <h1>This is a Heading</h1>
 <p>This is a paragraph.</p>
-
-
+    
+<label for="tokenAddress">Token Address:</label>
+<input type="text" id="tokenAddress" size=50 value = '0x0000000000000000000000000000000000001010'><br>
+<label for="tokenSymbol">Token Address:</label>
+<input type="text" id="tokenSymbol" value='MATIC'><br>
+<label for="tokenDecimals">Token Address:</label>
+<input type="text" id="tokenDecimals" value='18'><br>
+<label for="tokenImage">Token Address:</label>
+<input type="text" id="tokenImage" size=100 value='https://assets.coingecko.com/coins/images/4713/small/matic___polygon.jpg'><br>
+ 
 <script>
 function myFunction() {
-const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
-const tokenSymbol = 'TUT';
-const tokenDecimals = 18;
-const tokenImage = 'http://placekitten.com/200/300';
+var tokenAddress = document.getElementById('tokenAddress').value;
+var tokenSymbol = document.getElementById('tokenSymbol').value;
+var tokenDecimals = parseInt(document.getElementById('tokenDecimals').value);
+var tokenImage = document.getElementById('tokenImage').value;
 
 try {
   // wasAdded is a boolean. Like any RPC method, an error may be thrown.
