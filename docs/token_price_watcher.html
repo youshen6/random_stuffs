@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Coin Prices</title>
+</head>
+<body>
+    <h2>Fetch latest token prices in USDC from <a href='https://app.1inch.io/#/137/'>1inch.io</a></h2>
+    <div id="myData"></div>
+    <script>
+        var apihost = 'https://api.1inch.exchange/v3.0/137';
+	var amount = '100000000000000'
+	var toTokenAddress = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174' //USDC
+	var fromTokenAddresses = {'FISH':'0x3a3df212b7aa91aa0402b9035b098891d276572b',
+			'MATIC': '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+			'DFYN': '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
+			'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a'
+			}
+	
+	for (var fromTokenAddress in fromTokenAddresses) {
+    	
+        	fetch(apihost + '/quote?fromTokenAddress=' + fromTokenAddresses[fromTokenAddress] + '&toTokenAddress=' + toTokenAddress + '&amount=' + amount)
+       		     .then(function (response) {
+       		         return response.json();
+       		     })
+        	    .then(function (data) {
+        	        appendData(data);
+     		       })
+      		      .catch(function (err) {
+       		         console.log('error: ' + err);
+        	    });
+	}
+        function appendData(data) {
+            var mainContainer = document.getElementById("myData");
+            var div = document.createElement("div");
+            div.innerHTML = data.fromToken.symbol + ': ' + parseFloat(data.toTokenAmount)/100;
+            mainContainer.appendChild(div);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
