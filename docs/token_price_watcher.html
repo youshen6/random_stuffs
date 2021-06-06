@@ -7,7 +7,7 @@
     <title>Token Prices</title>
 </head>
 <body>
-    <h2>Fetch latest token prices (in USDC) from <a href='https://app.1inch.io/#/137/'>1inch.io</a></h2>
+    <h2>Fetch latest token prices (in USDC) from <a href='https://app.1inch.io/#/137/' target="_blank" rel="noopener noreferrer">1inch.io</a></h2>
     <div id="myData"></div>
     <script>
         var apihost = 'https://api.1inch.exchange/v3.0/137';
@@ -23,7 +23,8 @@
 	
 	for (var fromTokenAddress in fromTokenAddresses) {
     	
-        	fetch(apihost + '/quote?fromTokenAddress=' + fromTokenAddresses[fromTokenAddress] + '&toTokenAddress=' + toTokenAddress + '&amount=' + amount)
+        	fetch(apihost + '/quote?fromTokenAddress=' + fromTokenAddresses[fromTokenAddress] 
+		      		+ '&toTokenAddress=' + toTokenAddress + '&amount=' + amount)
        		     .then(function (response) {
        		         return response.json();
        		     })
@@ -37,7 +38,8 @@
         function appendData(data) {
             var mainContainer = document.getElementById("myData");
             var div = document.createElement("div");
-            div.innerHTML = "<a href='" + coingecko + data.fromToken.address + "'>" + data.fromToken.symbol + '</a>: ' + parseFloat(data.toTokenAmount)/100;
+            div.innerHTML = "<a href='" + coingecko + data.fromToken.address + "' target='_blank' rel='noopener noreferrer'>" 
+		    		+ data.fromToken.symbol + '</a>: ' + parseFloat(data.toTokenAmount)/100;
             mainContainer.appendChild(div);
         }
     </script>
