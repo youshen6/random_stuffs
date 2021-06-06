@@ -19,6 +19,8 @@
 			'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a'
 			}
 	
+	var coingecko = 'https://www.coingecko.com/en/coins/'
+	
 	for (var fromTokenAddress in fromTokenAddresses) {
     	
         	fetch(apihost + '/quote?fromTokenAddress=' + fromTokenAddresses[fromTokenAddress] + '&toTokenAddress=' + toTokenAddress + '&amount=' + amount)
@@ -35,7 +37,7 @@
         function appendData(data) {
             var mainContainer = document.getElementById("myData");
             var div = document.createElement("div");
-            div.innerHTML = data.fromToken.symbol + ': ' + parseFloat(data.toTokenAmount)/100;
+            div.innerHTML = "<a href='" + coingecko + data.fromToken.address + "'>" + data.fromToken.symbol + '</a>: ' + parseFloat(data.toTokenAmount)/100;
             mainContainer.appendChild(div);
         }
     </script>
