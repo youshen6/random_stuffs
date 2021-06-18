@@ -18,16 +18,16 @@
 			'MATIC': '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
 			'DFYN': '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
 			'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a',
-			'WETH': '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+			'WETH': '0x7ceB23fD6bC0adD59E62ac25578270cff1b9f619',
 			'OMEN': '0x76e63a3e7ba1e2e61d3da86a87479f983de89a7e',
-			'gNFT': '0xf5c39a7CEff5dA5BFB062389f62939A8C8396CB3'
+			'gNFT': '0xf5c39a7ceff5dA5BFB062389f62939A8C8396CB3'
 			}
 	
 	var price = 'https://api.dex.guru/v2/tokens/price'
 	
 	var request_body = []
 	for (var fromTokenAddress in fromTokenAddresses) {
-    		request_body.push(fromTokenAddresses[fromTokenAddress] + network)
+    		request_body.push(fromTokenAddresses[fromTokenAddress] + network);
 	}
 		
 	fetch(price, {method:'POST', body: JSON.stringify({"ids":request_body})})
@@ -40,26 +40,22 @@
 	      .catch(function (err) {
 		 console.log('error: ' + err);
 	    });
-	}
+	
         function appendData(ret) {
             var mainContainer = document.getElementById("myData");
 	    
-	    for var token in ret {
+	    for (var c in ret.data) {
+		var token = ret.data[c]
 	    	var div = document.createElement("div");
             	div.innerHTML = "<a href='https://dex.guru/token/" + token.address + network + "' target='_blank' rel='noopener noreferrer'>" 
-		    		+ getKeyByValue(fromTokenAddresses, token.address) + '</a>: ' + token.token_price_usd;
+		    		+ getKeyByValue(fromTokenAddresses, token.address) + '</a>: ' + parseFloat(token.token_price_usd).toFixed(2);
             	mainContainer.appendChild(div);
 	    }
         }
 	    
 	function getKeyByValue(object, value) {
-	  return Object.keys(object).find(key => object[key] === value);
+	  return Object.keys(object).find(key => object[key].toLowerCase() === value.toLowerCase());
 	}
     </script>
 </body>
 </html>
-
-
-
-
-
