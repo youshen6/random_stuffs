@@ -30,7 +30,7 @@
     		request_body.push(fromTokenAddresses[fromTokenAddress] + network)
 	}
 		
-	fetch(price, {method:'POST', body: {"ids":request_body}})
+	fetch(price, {method:'POST', body: JSON.stringify({"ids":request_body})})
 	     .then(function (response) {
 		 return response.json();
 	     })
