@@ -8,13 +8,13 @@
 </head>
 <body>
 <a href="index.html">Home</a>
-    <h2>Fetch latest token prices (in USDC) from <a href='https://app.1inch.io/#/137/' target="_blank" rel="noopener noreferrer">1inch.io</a></h2>
+    <h2>Fetch latest Polygon token prices from <a href='https://dex.guru/' target="_blank" rel="noopener noreferrer">dex.guru</a></h2>
     <div id="myData"></div>
     <script>
-        var apihost = 'https://api.1inch.exchange/v3.0/137';
-	var amount = '100000000000000'
-	var toTokenAddress = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174' //USDC
-	var fromTokenAddresses = {'FISH':'0x3a3df212b7aa91aa0402b9035b098891d276572b',
+        var network = '-polygon';
+	    
+	var fromTokenAddresses = {'USDC':'0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+			'FISH':'0x3a3df212b7aa91aa0402b9035b098891d276572b',
 			'MATIC': '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
 			'DFYN': '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
 			'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a',
@@ -23,29 +23,38 @@
 			'gNFT': '0xf5c39a7CEff5dA5BFB062389f62939A8C8396CB3'
 			}
 	
-	var coingecko = 'https://www.coingecko.com/en/coins/'
+	var price = 'https://api.dex.guru/v2/tokens/price/'
 	
+	var request_body = []
 	for (var fromTokenAddress in fromTokenAddresses) {
-    	
-        	fetch(apihost + '/quote?fromTokenAddress=' + fromTokenAddresses[fromTokenAddress] 
-		      		+ '&toTokenAddress=' + toTokenAddress + '&amount=' + amount)
-       		     .then(function (response) {
-       		         return response.json();
-       		     })
-        	    .then(function (data) {
-        	        appendData(data);
-     		       })
-      		      .catch(function (err) {
-       		         console.log('error: ' + err);
-        	    });
+    		request_body.push(fromTokenAddresses[fromTokenAddress] + network)
 	}
-        function appendData(data) {
+		
+	fetch(price, {method:'POST', body: {"ids":request_body}})
+	     .then(function (response) {
+		 return response.json();
+	     })
+	    .then(function (data) {
+		appendData(data);
+	       })
+	      .catch(function (err) {
+		 console.log('error: ' + err);
+	    });
+	}
+        function appendData(ret) {
             var mainContainer = document.getElementById("myData");
-            var div = document.createElement("div");
-            div.innerHTML = "<a href='" + coingecko + data.fromToken.address + "' target='_blank' rel='noopener noreferrer'>" 
-		    		+ data.fromToken.symbol + '</a>: ' + parseFloat(data.toTokenAmount)/100;
-            mainContainer.appendChild(div);
+	    
+	    for var token in ret {
+	    	var div = document.createElement("div");
+            	div.innerHTML = "<a href='https://dex.guru/token/" + token.address + network + "' target='_blank' rel='noopener noreferrer'>" 
+		    		+ getKeyByValue(fromTokenAddresses, token.address) + '</a>: ' + token.token_price_usd;
+            	mainContainer.appendChild(div);
+	    }
         }
+	    
+	function getKeyByValue(object, value) {
+	  return Object.keys(object).find(key => object[key] === value);
+	}
     </script>
 </body>
 </html>
