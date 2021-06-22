@@ -9,6 +9,7 @@
 <body>
 <a href="index.html">Home</a>
     <h2>Fetch latest Polygon token prices from <a href='https://dex.guru' target="_blank" rel="noopener noreferrer">dex.guru</a></h2>
+    <div id="gas"></div>
     <div id="myData"></div>
     <script>
         var network = '-polygon';
@@ -78,6 +79,7 @@
 	}
 	    
 	function gasfee(ret) {
+		var mainContainer = document.getElementById("gas");
 	 	var div = document.createElement("div");
             	div.innerHTML = "Current Gas Fees<br>safeLow: " + ret.safeLow + "<br>standard: " + ret.standard
 				+ "<br>fast: " + ret.fast + "<br>fastest: " + ret.fastest;
