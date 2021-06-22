@@ -37,6 +37,19 @@
     		request_body.push(fromTokenAddresses[fromTokenAddress] + network);
 	}
 		
+		
+	fetch('https://gasstation-mainnet.matic.network/')
+	    .then(function (response) {
+		 return response.json();
+	     })
+	    .then(function (data) {
+		 gasfee(data);
+	     })
+	    .catch(function (err) {
+		 console.log('error: ' + err);
+	    });
+	    
+	    
 	fetch(price, {method:'POST', body: JSON.stringify({"ids":request_body})})
 	     .then(function (response) {
 		 return response.json();
@@ -47,7 +60,7 @@
 	      .catch(function (err) {
 		 console.log('error: ' + err);
 	    });
-	
+	 
         function appendData(ret) {
             var mainContainer = document.getElementById("myData");
 	    
@@ -62,6 +75,13 @@
 	    
 	function getKeyByValue(object, value) {
 	  return Object.keys(object).find(key => object[key].toLowerCase() === value.toLowerCase());
+	}
+	    
+	function gasfee(ret) {
+	 	var div = document.createElement("div");
+            	div.innerHTML = "Current Gas Fees<br>safeLow: " + ret.safeLow + "<br>standard: " + ret.standard
+				+ "<br>fast: " + ret.fast + "<br>fastest: " + ret.fastest;
+            	mainContainer.appendChild(div);
 	}
     </script>
 </body>
