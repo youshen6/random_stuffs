@@ -72,17 +72,13 @@
 		result.then(data => appendData(data));
 	}
 	
-	function sleep(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
     
         function appendData(ret) {
             	var mainContainer = document.getElementById("prices");
-		var tokenprice = 1 / parseFloat(ret.price);
-		var fromadd = ret.buyTokenAddress;
+		var tokenprice = 1.0 / parseFloat(ret.price);
 		var fromtoken = ret.sellTokenAddress;
 		var div = document.createElement("div");
-		div.innerHTML = "<a href='https://dex.guru/token/" + fromadd + network + "' target='_blank' rel='noopener noreferrer'>" 
+		div.innerHTML = "<a href='https://dex.guru/token/" + fromtoken + network + "' target='_blank' rel='noopener noreferrer'>" 
 				+ getKeyByValue(fromTokenAddresses, fromtoken) + '</a>: ' + tokenprice.toFixed(2);
 		mainContainer.appendChild(div);
 	
@@ -91,6 +87,10 @@
 	function getKeyByValue(object, value) {
 	  	return Object.keys(object).find(key => object[key].toLowerCase() === value.toLowerCase());
 	}
+	    
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}   
 	    
 	function gasfee(ret) {
 		var mainContainer = document.getElementById("gas");
