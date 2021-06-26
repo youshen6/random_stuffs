@@ -56,7 +56,7 @@
 	var endpoint = 'swap/v1/price';
 	
 	for (var from_token in fromTokenAddresses) {
-		getPrice(api_host + endpoint + '?sellToken=' + fromTokenAddresses[from_token] + '&buyToken=' + base_token + '&buyAmount=' + base_amount, 'polygon');
+		getPrice(api_host + endpoint + '?sellToken=' + fromTokenAddresses[from_token] + '&buyToken=' + base_token + '&buyAmount=' + base_amount, 'polygon', fromTokenAddresses);
 	}
 	
 	//based token is USDC
@@ -70,7 +70,7 @@
 	var eth_api = 'https://api.0x.org/';
 	
 	for (var from_token in eth_tokens) {
-		getPrice(eth_api + endpoint + '?sellToken=' + eth_tokens[from_token] + '&buyToken=' + eth_base_token + '&buyAmount=' + base_amount, 'eth');
+		getPrice(eth_api + endpoint + '?sellToken=' + eth_tokens[from_token] + '&buyToken=' + eth_base_token + '&buyAmount=' + base_amount, 'eth', eth_tokens);
 	}
 	
 	//api will not response if requests are made too frequent
@@ -86,16 +86,16 @@
 		} while (i < 3 && status == 503);
 
 		var result = response.json();
-		result.then(data => appendData(data, frame));
+		result.then(data => appendData(data, frame, tokens));
 	}
 	
-        function appendData(ret, frame) {
+        function appendData(ret, frame, tokens) {
             	var mainContainer = document.getElementById(frame);
 		var tokenprice = 1.0 / parseFloat(ret.price);
 		var fromtoken = ret.sellTokenAddress;
 		var div = document.createElement("div");
 		div.innerHTML = "<a href='https://dex.guru/token/" + fromtoken + '-' + frame + "' target='_blank' rel='noopener noreferrer'>" 
-				+ getKeyByValue(fromTokenAddresses, fromtoken) + '</a>: ' + tokenprice.toFixed(2);
+				+ getKeyByValue(tokens, fromtoken) + '</a>: ' + tokenprice.toFixed(2);
 		mainContainer.appendChild(div);
         }
 	    
