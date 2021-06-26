@@ -74,7 +74,7 @@
 	}
 	
 	//api will not response if requests are made too frequent
-	async function getPrice(url, frame) {
+	async function getPrice(url, frame, tokens) {
 		var i = 0;
 		await sleep(300*Math.random());
 		do {
