@@ -8,9 +8,12 @@
 </head>
 <body>
 <a href="index.html">Home</a>
-    <h2>Fetch latest Polygon token prices in USDC from <a href='https://0x.org/docs/api' target="_blank" rel="noopener noreferrer">0x API</a></h2>
+    <h2>Fetch latest token prices in USDC from <a href='https://0x.org/docs/api' target="_blank" rel="noopener noreferrer">0x API</a></h2>
     <div id="gas"></div>
-    <div id="prices"></div>
+	<p>Polygon</p>
+    <div id="polygon"></div>
+	<p>Ethereum</p>
+	<div id='eth'></div>
     <script>
 	//show gas fees
 	fetch('https://gasstation-mainnet.matic.network/')
@@ -25,8 +28,7 @@
 	    });
 	    
 	    
-        var network = '-polygon';
-	
+        
 	//based token is USDC
 	var base_token = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174';
 	var base_amount = 1000000;
@@ -47,18 +49,32 @@
 			,'8BALL': '0xa88b4ce79c5814fb7df5cc53a46bdf8e485168f9'
 			,'CUBAN': '0x2cd46e6f1a933f784478362f04d691a0f3c9a6aa'
 			,'BPUL':'0x68f044B59D96ec856aC72C29Df997348c8C1fFf3'
-,'YELD':'0xd0f3121A190d85dE0AB6131f2bCEcdbfcfB38891'
+			,'YELD':'0xd0f3121A190d85dE0AB6131f2bCEcdbfcfB38891'
 			};
 	
 	var api_host = 'https://polygon.api.0x.org/';
 	var endpoint = 'swap/v1/price';
 	
 	for (var from_token in fromTokenAddresses) {
-		getPrice(api_host + endpoint + '?sellToken=' + fromTokenAddresses[from_token] + '&buyToken=' + base_token + '&buyAmount=' + base_amount);
+		getPrice(api_host + endpoint + '?sellToken=' + fromTokenAddresses[from_token] + '&buyToken=' + base_token + '&buyAmount=' + base_amount, 'polygon');
+	}
+	
+	//based token is USDC
+	var eth_base_token = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+	var eth_tokens = {'WBTC':'0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+			 ,'WETH':'0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+			 ,'WFIL':'0x6e1A19F235bE7ED8E3369eF73b196C07257494DE'
+			 ,'BZZ': '0x19062190b1925b5b6689d7073fdfc8c2976ef8cb'
+			 }
+	
+	var eth_api = 'https://api.0x.org/';
+	
+	for (var from_token in eth_tokens) {
+		getPrice(eth_api + endpoint + '?sellToken=' + eth_tokens[from_token] + '&buyToken=' + eth_base_token + '&buyAmount=' + base_amount, 'eth');
 	}
 	
 	//api will not response if requests are made too frequent
-	async function getPrice(url) {
+	async function getPrice(url, frame) {
 		var i = 0;
 		await sleep(300*Math.random());
 		do {
@@ -70,19 +86,17 @@
 		} while (i < 3 && status == 503);
 
 		var result = response.json();
-		result.then(data => appendData(data));
+		result.then(data => appendData(data, frame));
 	}
 	
-    
-        function appendData(ret) {
-            	var mainContainer = document.getElementById("prices");
+        function appendData(ret, frame) {
+            	var mainContainer = document.getElementById(frame);
 		var tokenprice = 1.0 / parseFloat(ret.price);
 		var fromtoken = ret.sellTokenAddress;
 		var div = document.createElement("div");
-		div.innerHTML = "<a href='https://dex.guru/token/" + fromtoken + network + "' target='_blank' rel='noopener noreferrer'>" 
+		div.innerHTML = "<a href='https://dex.guru/token/" + fromtoken + '-' + frame + "' target='_blank' rel='noopener noreferrer'>" 
 				+ getKeyByValue(fromTokenAddresses, fromtoken) + '</a>: ' + tokenprice.toFixed(2);
 		mainContainer.appendChild(div);
-	
         }
 	    
 	function getKeyByValue(object, value) {
@@ -91,7 +105,7 @@
 	    
 	function sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
-	}   
+	}
 	    
 	function gasfee(ret) {
 		var mainContainer = document.getElementById("gas");
