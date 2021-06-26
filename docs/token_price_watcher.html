@@ -8,38 +8,11 @@
 </head>
 <body>
 <a href="index.html">Home</a>
-    <h2>Fetch latest Polygon token prices from <a href='https://dex.guru' target="_blank" rel="noopener noreferrer">dex.guru</a></h2>
+    <h2>Fetch latest Polygon token prices in USDC from <a href='https://0x.org/docs/api' target="_blank" rel="noopener noreferrer">0x API</a></h2>
     <div id="gas"></div>
-    <div id="myData"></div>
+    <div id="prices"></div>
     <script>
-        var network = '-polygon';
-	    
-	var fromTokenAddresses = {'USDC':'0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-			'WBTC': '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
-			'WETH': '0x7ceB23fD6bC0adD59E62ac25578270cff1b9f619',
-			'MATIC': '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-			'FISH':'0x3a3df212b7aa91aa0402b9035b098891d276572b',
-			'DFYN': '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
-			'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a',
-			'IRON': '0xd86b5923f3ad7b585ed81b448170ae026c65ae9a',
-			'OMEN': '0x76e63a3e7ba1e2e61d3da86a87479f983de89a7e',
-			'gNFT': '0xf5c39a7ceff5dA5BFB062389f62939A8C8396CB3',
-			'WFIL': '0xede1b77c0ccc45bfa949636757cd2ca7ef30137f',
-			'QUICK': '0x831753dd7087cac61ab5644b308642cc1c33dc13',
-			'LINK': '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39',
-			'8BALL': '0xa88b4ce79c5814fb7df5cc53a46bdf8e485168f9',
-			'CUBAN': '0x2cd46e6f1a933f784478362f04d691a0f3c9a6aa',
-'BPUL':'0x68f044B59D96ec856aC72C29Df997348c8C1fFf3'
-			}
-	
-	var price = 'https://api.dex.guru/v2/tokens/price'
-	
-	var request_body = []
-	for (var fromTokenAddress in fromTokenAddresses) {
-    		request_body.push(fromTokenAddresses[fromTokenAddress] + network);
-	}
-		
-		
+	//show gas fees
 	fetch('https://gasstation-mainnet.matic.network/')
 	    .then(function (response) {
 		 return response.json();
@@ -52,31 +25,71 @@
 	    });
 	    
 	    
-	fetch(price, {method:'POST', body: JSON.stringify({"ids":request_body})})
-	     .then(function (response) {
-		 return response.json();
-	     })
-	    .then(function (data) {
-		appendData(data);
-	       })
-	      .catch(function (err) {
-		 console.log('error: ' + err);
-	    });
-	 
-        function appendData(ret) {
-            var mainContainer = document.getElementById("myData");
+        var network = '-polygon';
+	
+	//based token is USDC
+	var base_token = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174';
+	var base_amount = 1000000;
 	    
-	    for (var c in ret.data) {
-		var token = ret.data[c]
-	    	var div = document.createElement("div");
-            	div.innerHTML = "<a href='https://dex.guru/token/" + token.address + network + "' target='_blank' rel='noopener noreferrer'>" 
-		    		+ getKeyByValue(fromTokenAddresses, token.address) + '</a>: ' + parseFloat(token.token_price_usd).toFixed(2);
-            	mainContainer.appendChild(div);
-	    }
+	var fromTokenAddresses = {'DAI':'0x8f3cf7ad23cd3cadbd9735aff958023239c6a063'
+			,'WBTC': '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6'
+			,'WETH': '0x7ceB23fD6bC0adD59E62ac25578270cff1b9f619'
+			,'MATIC': '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+			,'FISH':'0x3a3df212b7aa91aa0402b9035b098891d276572b'
+			,'DFYN': '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97'
+			,'TITAN': '0xaaa5b9e6c589642f98a1cda99b9d024b8407285a'
+			,'IRON': '0xd86b5923f3ad7b585ed81b448170ae026c65ae9a'
+			,'OMEN': '0x76e63a3e7ba1e2e61d3da86a87479f983de89a7e'
+			,'gNFT': '0xf5c39a7ceff5dA5BFB062389f62939A8C8396CB3'
+			,'WFIL': '0xede1b77c0ccc45bfa949636757cd2ca7ef30137f'
+			,'QUICK': '0x831753dd7087cac61ab5644b308642cc1c33dc13'
+			,'LINK': '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39'
+			,'8BALL': '0xa88b4ce79c5814fb7df5cc53a46bdf8e485168f9'
+			,'CUBAN': '0x2cd46e6f1a933f784478362f04d691a0f3c9a6aa'
+			,'BPUL':'0x68f044B59D96ec856aC72C29Df997348c8C1fFf3'
+			};
+	
+	var api_host = 'https://polygon.api.0x.org/';
+	var endpoint = 'swap/v1/price';
+	
+	for (var from_token in fromTokenAddresses) {
+		getPrice(api_host + endpoint + '?sellToken=' + fromTokenAddresses[from_token] + '&buyToken=' + base_token + '&buyAmount=' + base_amount);
+	}
+	
+	//api will not response if requests are made too frequent
+	async function getPrice(url) {
+		var i = 0;
+		await sleep(300*Math.random());
+		do {
+			var response = await fetch(url);
+			var status = await response.status;
+			console.log(status);
+			i++;
+			await sleep(1000);
+		} while (i < 3 && status == 503);
+
+		var result = response.json();
+		result.then(data => appendData(data));
+	}
+	
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+    
+        function appendData(ret) {
+            	var mainContainer = document.getElementById("prices");
+		var tokenprice = 1 / parseFloat(ret.price);
+		var fromadd = ret.buyTokenAddress;
+		var fromtoken = ret.sellTokenAddress;
+		var div = document.createElement("div");
+		div.innerHTML = "<a href='https://dex.guru/token/" + fromadd + network + "' target='_blank' rel='noopener noreferrer'>" 
+				+ getKeyByValue(fromTokenAddresses, fromtoken) + '</a>: ' + tokenprice.toFixed(2);
+		mainContainer.appendChild(div);
+	
         }
 	    
 	function getKeyByValue(object, value) {
-	  return Object.keys(object).find(key => object[key].toLowerCase() === value.toLowerCase());
+	  	return Object.keys(object).find(key => object[key].toLowerCase() === value.toLowerCase());
 	}
 	    
 	function gasfee(ret) {
