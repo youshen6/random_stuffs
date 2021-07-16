@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Swap Bot</title>
+</head>
+<body>
+<a href="index.html">Home</a>
+<button class="enableEthereumButton">Connect Metamask</button>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@latest/dist/matic.js"></script>
+
+<script>
+const ethereumButton = document.querySelector('.enableEthereumButton');
+
+ethereumButton.addEventListener('click', () => {
+  //Will Start the metamask extension
+  ethereum.request({ method: 'eth_requestAccounts' });
+});
+
+
+console.log('loaded')
+let web3 = new Web3('https://rpc-mainnet.matic.network/');
+
+console.log(web3);
+const network = Matic.initializeNetwork('mainnet','v1');
+
+</script>
+
+</body>
+</html>
