@@ -36,7 +36,7 @@ updateButton.addEventListener('click', () => {
     
 async function getAccount() {
   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-  const account = accounts[0];
+  var account = accounts[0];
   showAccount.innerHTML = account;
     
   getBalance();
@@ -47,9 +47,9 @@ const rpcURL = 'https://rpc-mainnet.matic.network/';
 const web3 = new Web3(rpcURL);
 
 async function getBalance() {
-    var matic_wei = await web3.eth.getBalance(account);
+    const matic_wei = await web3.eth.getBalance(account);
     showBalance.innerHTML = web3.utils.fromWei(matic_wei, 'ether');
-    var curr = new Date();
+    const curr = new Date();
     showTime.innerHTML = curr.toString();
 };
 
