@@ -40,8 +40,8 @@ const network = Matic.initializeNetwork('mainnet','v1');
 
 
     
-async function getBalance() {
-    var matic_bal = await web3.eth.getBalance(address, (err, wei) => {
+async function getBalance(account) {
+    var matic_bal = await web3.eth.getBalance(account, (err, wei) => {
                         balance = web3.utils.fromWei(wei, 'ether');
                         });
 
