@@ -41,13 +41,12 @@ const network = Matic.initializeNetwork('mainnet','v1');
 
     
 async function getBalance(account) {
-    var matic_bal = await web3.eth.getBalance(account, (err, wei) => {
-                        balance = web3.utils.fromWei(wei, 'ether');
-                        });
+    var matic_wei = await web3.eth.getBalance(account)
+    var matic_bal = web3.utils.fromWei(matic_wei, 'ether');
 
     var mainContainer = document.getElementById("output");
     var div = document.createElement("div");
-    div.innerHTML = "Your MATIC balance is:" + matic_bal.toString() + "<br>";
+    div.innerHTML = "Your MATIC balance is:" + matic_bal + "<br>";
     mainContainer.appendChild(div);
 };
 
