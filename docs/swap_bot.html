@@ -8,7 +8,9 @@
 </head>
 <body>
 <a href="index.html">Home</a><br>
-<button class="enableEthereumButton">Connect Metamask</button>
+<button class="enableEthereumButton">Enable Ethereum</button>
+<h2>Account: <span class="showAccount"></span></h2>
+ 
 <div id="output"></div>
  
 <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
@@ -16,11 +18,17 @@
 
 <script>
 const ethereumButton = document.querySelector('.enableEthereumButton');
+const showAccount = document.querySelector('.showAccount');
 
 ethereumButton.addEventListener('click', () => {
-  //Will Start the metamask extension
-  ethereum.request({ method: 'eth_requestAccounts' });
+  getAccount();
 });
+
+async function getAccount() {
+  const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+  const account = accounts[0];
+  showAccount.innerHTML = account;
+}
 
 
 const rpcURL = 'https://rpc-mainnet.matic.network/';
