@@ -35,10 +35,6 @@ async function getAccount() {
 const rpcURL = 'https://rpc-mainnet.matic.network/';
 const web3 = new Web3(rpcURL);
 
-console.log(web3);
-const network = Matic.initializeNetwork('mainnet','v1');
-
-
     
 async function getBalance(account) {
     var matic_wei = await web3.eth.getBalance(account)
